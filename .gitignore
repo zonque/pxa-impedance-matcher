@@ -1,0 +1,5 @@
+*.sh
+*.o
+*.bin
+matcher
+uImage
