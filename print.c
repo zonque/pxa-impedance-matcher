@@ -1,15 +1,23 @@
 #include "types.h"
 #include "print.h"
 
+static inline void nop(int n)
+{
+	while (n--)
+		asm("nop");
+}
+
+static void __putch(char c)
+{
+	*(volatile __u32 *) 0x40100000 = c;
+	nop(100);
+}
+
 void putch(char c)
 {
-	int i;
-	volatile __u32 *reg = (volatile __u32 *) 0x40100000;
-
-	*reg = c;
-
-	for (i = 0; i < 100; i++)
-		asm("nop");
+	__putch(c);
+	if (c == '\n')
+		__putch('\r');
 }
 
 static const char hexdigets[] =
@@ -28,11 +36,7 @@ void printhex(__u32 u)
 
 void putstr(const char *s)
 {
-	while (*s) {
-		putch(*s);
-		if (*s == '\n')
-			putch('\r');
-		s++;
-	}
+	while (*s)
+		putch(*s++);
 }
 
