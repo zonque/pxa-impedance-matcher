@@ -1,0 +1,11 @@
+The pxa-impedance-matcher is a 3rd stage loader that is used to boot
+legacy hardware that has a bootloader which is unable to boot DT kernels.
+
+It acts as chain loader which determines the correct hardware type and DTB
+blob.
+
+It's completetly specific to PXA3xx based Raumfeld hardware, and no attempt
+has been made to keep the code flexible or generic. It should, however, be
+easily possible to modify the code base in order to make it work on other
+boards.
+
