@@ -44,6 +44,6 @@ void main(__u32 dummy, __u32 machid, const struct tag *tags)
 	putstr("Booting into Linux kernel ...\n");
 
 	start_kernel = zimage;
-	start_kernel(0, 0xffff, board->dtb);
+	start_kernel(0, 0xffffffff, board->dtb);
 }
 
