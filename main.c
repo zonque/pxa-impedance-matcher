@@ -5,7 +5,7 @@
 
 extern __u32 _binary_input_zImage_start;
 
-void init(__u32 dummy, __u32 machid, const struct tag *tags)
+void main(__u32 dummy, __u32 machid, const struct tag *tags)
 {
 	__u32 system_rev = 0;
 	const struct tag *t;

@@ -26,13 +26,10 @@ dtb-%.o: input/%.dtb
 zimage.o: input/zImage
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
 
-start.o: start.S
-	$(GCC) -c $^
-
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: start.o main.o print.o board.o $(INPUT_OBJS)
+matcher: main.o print.o board.o $(INPUT_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -o matcher $^
 
 matcher.bin: matcher
