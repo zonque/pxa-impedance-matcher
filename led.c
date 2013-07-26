@@ -15,6 +15,7 @@ static void wait(__u32 ticks)
 {
 	__u32 v;
 
+	/* OSCR */
 	writel(0, 0x40A00010);
 
 	do {
