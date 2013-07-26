@@ -8,14 +8,6 @@ struct tag_header {
 	__u32 tag;
 };
 
-#define ATAG_CORE       0x54410001
-
-struct tag_core {
-	__u32 flags;	    /* bit 0 = read-only */
-	__u32 pagesize;
-	__u32 rootdev;
-};
-
 /* board revision */
 #define ATAG_REVISION   0x54410007
 
@@ -26,7 +18,6 @@ struct tag_revision {
 struct tag {
 	struct tag_header hdr;
 	union {
-		struct tag_core		core;
 		struct tag_revision	rev;
 	} u;
 };
