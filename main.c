@@ -1,9 +1,9 @@
 #include "types.h"
 #include "atags.h"
 #include "print.h"
+#include "board.h"
 
-extern __u32 _binary____linux_arch_arm_boot_zImage_start;
-extern __u32 _binary____linux_dtb_start;
+extern __u32 _binary_input_zImage_start;
 
 void init(__u32 dummy, __u32 machid, const struct tag *tags) __attribute__ ((noreturn));
 void init(__u32 dummy, __u32 machid, const struct tag *tags)
@@ -11,8 +11,8 @@ void init(__u32 dummy, __u32 machid, const struct tag *tags)
 	__u32 system_rev = 0;
 	const struct tag *t;
 	void (*start_kernel)(__u32 dummy, __u32 machid, void *dtb) __attribute__ ((noreturn));
-	void *zimage = &_binary____linux_arch_arm_boot_zImage_start;
-	void *dtb = &_binary____linux_dtb_start;
+	void *zimage = &_binary_input_zImage_start;
+	struct board *board = NULL;
 
 	putstr("++ Impedance Matcher (3rd stage loader) ++\n");
 
@@ -25,13 +25,25 @@ void init(__u32 dummy, __u32 machid, const struct tag *tags)
 		}
 	}
 
-	putstr("Booting into Linux kernel @0x");
-	printhex((__u32) zimage);
-	putstr(" with DTB blob @0x");
-	printhex((__u32) dtb);
+	board = match_board(machid, system_rev & 0xff);
+	if (!board) {
+		putstr("ERROR MATCHING BOARD!\n");
+		putstr("MACHID: 0x");
+		printhex(machid);
+		putstr("\n");
+		putstr("SYSTEM_REV: 0x");
+		printhex(system_rev);
+		putstr("\n");
+		for(;;);
+	}
+
+	putstr("Detected board: ");
+	putstr(board->name);
 	putstr("\n");
 
+	putstr("Booting into Linux kernel ...\n");
+
 	start_kernel = zimage;
-	start_kernel(0, 0xffff, dtb);
+	start_kernel(0, 0xffff, board->dtb);
 }
 

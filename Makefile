@@ -6,24 +6,33 @@ LD=$(CROSS_COMPILE)ld
 LOADADDR=0xa0008000
 BINFMT=elf32-littlearm
 
+INPUT_OBJS = \
+	zimage.o		\
+	dtb-raumfeld-controller-0.o	\
+	dtb-raumfeld-controller-1.o	\
+	dtb-raumfeld-controller-2.o	\
+	dtb-raumfeld-connector-0.o	\
+	dtb-raumfeld-connector-1.o	\
+	dtb-raumfeld-connector-2.o	\
+	dtb-raumfeld-speaker-0.o	\
+	dtb-raumfeld-speaker-1.o	\
+	dtb-raumfeld-speaker-2.o
+
 all: matcher.bin matcher.image
+
+dtb-%.o: input/%.dtb
+	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
+
+zimage.o: input/zImage
+	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
 
 start.o: start.S
 	$(GCC) -c $^
 
-main.o: main.c
+%.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-print.o: print.c
-	$(GCC) $(CFLAGS) -c $^
-
-zimage-in.o: $(ZIMAGE_IN)
-	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $(ZIMAGE_IN) $@
-
-dtb-in.o: $(DTB_IN)
-	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $(DTB_IN) $@
-
-matcher: start.o main.o print.o zimage-in.o dtb-in.o
+matcher: start.o main.o print.o board.o $(INPUT_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -o matcher $^
 
 matcher.bin: matcher

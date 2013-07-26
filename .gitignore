@@ -3,3 +3,5 @@
 *.bin
 matcher
 uImage
+input/zImage
+input/*.dtb
