@@ -14,13 +14,16 @@ start.o: start.S
 main.o: main.c
 	$(GCC) $(CFLAGS) -c $^
 
+print.o: print.c
+	$(GCC) $(CFLAGS) -c $^
+
 zimage-in.o: $(ZIMAGE_IN)
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $(ZIMAGE_IN) $@
 
 dtb-in.o: $(DTB_IN)
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $(DTB_IN) $@
 
-matcher: start.o main.o zimage-in.o dtb-in.o
+matcher: start.o main.o print.o zimage-in.o dtb-in.o
 	$(LD) $(LDFLAGS) -T matcher.lds -o matcher $^
 
 matcher.bin: matcher
