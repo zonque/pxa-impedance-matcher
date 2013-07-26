@@ -5,12 +5,11 @@
 
 extern __u32 _binary_input_zImage_start;
 
-void init(__u32 dummy, __u32 machid, const struct tag *tags) __attribute__ ((noreturn));
 void init(__u32 dummy, __u32 machid, const struct tag *tags)
 {
 	__u32 system_rev = 0;
 	const struct tag *t;
-	void (*start_kernel)(__u32 dummy, __u32 machid, void *dtb) __attribute__ ((noreturn));
+	void (*start_kernel)(__u32 dummy, __u32 machid, void *dtb);
 	void *zimage = &_binary_input_zImage_start;
 	struct board *board = NULL;
 
