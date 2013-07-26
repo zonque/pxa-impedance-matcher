@@ -2,6 +2,7 @@
 #include "atags.h"
 #include "print.h"
 #include "board.h"
+#include "led.h"
 
 extern __u32 _binary_input_zImage_start;
 
@@ -33,7 +34,7 @@ void main(__u32 dummy, __u32 machid, const struct tag *tags)
 		putstr("SYSTEM_REV: 0x");
 		printhex(system_rev);
 		putstr("\n");
-		for(;;);
+		led_panic();
 	}
 
 	putstr("Detected board: ");

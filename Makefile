@@ -1,4 +1,4 @@
-CFLAGS=-Wall
+CFLAGS=-Wall -ffreestanding
 LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
@@ -29,7 +29,7 @@ zimage.o: input/zImage
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: main.o print.o board.o $(INPUT_OBJS)
+matcher: main.o print.o board.o led.o $(INPUT_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -o matcher $^
 
 matcher.bin: matcher
