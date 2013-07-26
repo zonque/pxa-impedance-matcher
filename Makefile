@@ -36,7 +36,9 @@ matcher.bin: matcher
 	$(OBJCOPY) -O binary matcher matcher.bin
 
 matcher.image: matcher.bin
-	mkimage -A arm -O linux -C none -T kernel -a $(LOADADDR) -e $(LOADADDR) -n "ImpedanceMatcher (3rd stage)" -d matcher.bin uImage
+	mkimage -A arm -O linux -C none -T kernel \
+		-a $(LOADADDR) -e $(LOADADDR) \
+		-n "ImpedanceMatcher (3rd stage)" -d $^ uImage
 
 clean:
 	rm -fr matcher.bin matcher *.o uImage
