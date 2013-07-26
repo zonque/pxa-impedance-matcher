@@ -18,7 +18,7 @@ INPUT_OBJS = \
 	dtb-raumfeld-speaker-1.o	\
 	dtb-raumfeld-speaker-2.o
 
-all: matcher.bin matcher.image
+all: uImage
 
 dtb-%.o: input/%.dtb
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
@@ -30,15 +30,15 @@ zimage.o: input/zImage
 	$(GCC) $(CFLAGS) -c $^
 
 matcher: main.o print.o board.o led.o $(INPUT_OBJS)
-	$(LD) $(LDFLAGS) -T matcher.lds -o matcher $^
+	$(LD) $(LDFLAGS) -T matcher.lds -o $@ $^
 
 matcher.bin: matcher
-	$(OBJCOPY) -O binary matcher matcher.bin
+	$(OBJCOPY) -O binary $^ $@
 
-matcher.image: matcher.bin
+uImage: matcher.bin
 	mkimage -A arm -O linux -C none -T kernel \
 		-a $(LOADADDR) -e $(LOADADDR) \
-		-n "ImpedanceMatcher (3rd stage)" -d $^ uImage
+		-n "ImpedanceMatcher (3rd stage)" -d $^ $@
 
 clean:
 	rm -fr matcher.bin matcher *.o uImage
