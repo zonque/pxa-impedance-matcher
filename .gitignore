@@ -1,6 +1,7 @@
 *.sh
 *.o
 *.bin
+cscope.*
 matcher
 uImage
 input/zImage

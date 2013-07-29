@@ -43,3 +43,9 @@ uImage: matcher.bin
 clean:
 	rm -fr matcher.bin matcher *.o uImage
 
+distclean: clean
+	rm -fr cscope.*
+
+cscope:
+	-find . -name "*.[chS]" >cscope.files
+	-cscope -b -R
