@@ -6,6 +6,11 @@ LD=$(CROSS_COMPILE)ld
 LOADADDR=0xa0008000
 BINFMT=elf32-littlearm
 
+COMMON_OBJS = \
+	main.o \
+	print.o \
+	register.o
+
 INPUT_OBJS = \
 	zimage.o		\
 	dtb-raumfeld-controller-0.o	\
@@ -29,7 +34,7 @@ zimage.o: input/zImage
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: main.o print.o board.o led.o $(INPUT_OBJS)
+matcher: $(COMMON_OBJS) board.o $(INPUT_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -o $@ $^
 
 matcher.bin: matcher
