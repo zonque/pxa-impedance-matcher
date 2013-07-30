@@ -17,10 +17,18 @@ struct tag_revision {
 	__u32 rev;
 };
 
+/* command line */
+#define ATAG_CMDLINE	0x54410009
+
+struct tag_cmdline {
+	char cmdline[1];	/* this is the minimum size */
+};
+
 struct tag {
 	struct tag_header hdr;
 	union {
 		struct tag_revision	rev;
+		struct tag_cmdline	cmdline;
 	} u;
 };
 

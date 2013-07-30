@@ -18,7 +18,8 @@ UART_OBJ = serial-$(UART).o
 COMMON_OBJS = \
 	main.o \
 	print.o \
-	register.o
+	register.o \
+	string.o
 
 INPUT_OBJS = \
 	zimage.o		\
