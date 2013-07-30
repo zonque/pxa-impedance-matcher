@@ -1,6 +1,8 @@
 #ifndef _ATAG_H
 #define _ATAG_H
 
+#include "types.h"
+
 #define ATAG_NONE       0x00000000
 
 struct tag_header {

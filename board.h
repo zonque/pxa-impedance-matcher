@@ -1,6 +1,9 @@
 #ifndef _BOARD_H
 #define _BOARD_H
 
+#include "types.h"
+#include "atags.h"
+
 struct board {
 	__u32		machid;
 	__u32		system_rev;
