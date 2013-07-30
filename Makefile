@@ -6,6 +6,10 @@ LD=$(CROSS_COMPILE)ld
 LOADADDR=0xa0008000
 BINFMT=elf32-littlearm
 
+MFG=raumfeld
+
+BOARD_OBJ = board-$(MFG).o
+
 COMMON_OBJS = \
 	main.o \
 	print.o \
@@ -34,7 +38,7 @@ zimage.o: input/zImage
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: $(COMMON_OBJS) board.o $(INPUT_OBJS)
+matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(INPUT_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -o $@ $^
 
 matcher.bin: matcher
