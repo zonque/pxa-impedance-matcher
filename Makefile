@@ -1,4 +1,13 @@
-CFLAGS=-Wall -ffreestanding
+ifneq ($(origin APPEND_KERNEL), undefined)
+INPUT_OBJS=zimage.o
+CFLAGS+=-DAPPEND_KERNEL="$(APPEND_KERNEL)"
+endif
+
+ifneq ($(origin APPEND_DTBS), undefined)
+CFLAGS+=-DAPPEND_DTBS="$(APPEND_DTBS)"
+endif
+
+CFLAGS+=-Wall -ffreestanding
 LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
@@ -21,34 +30,22 @@ COMMON_OBJS = \
 	register.o \
 	string.o
 
-INPUT_OBJS = \
-	zimage.o		\
-	dtb-raumfeld-controller-0.o	\
-	dtb-raumfeld-controller-1.o	\
-	dtb-raumfeld-controller-2.o	\
-	dtb-raumfeld-connector-0.o	\
-	dtb-raumfeld-connector-1.o	\
-	dtb-raumfeld-connector-2.o	\
-	dtb-raumfeld-speaker-0.o	\
-	dtb-raumfeld-speaker-1.o	\
-	dtb-raumfeld-speaker-2.o
-
 all: uImage
 
-dtb-%.o: input/%.dtb
-	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
-
-zimage.o: input/zImage
+zimage.o: $(APPEND_KERNEL)
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
 
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
 matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS)
-	$(LD) $(LDFLAGS) -T matcher.lds -o $@ $^
+	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $^
 
 matcher.bin: matcher
-	$(OBJCOPY) -O binary $^ $@
+	$(OBJCOPY) -O binary --set-section-flags .bss=alloc,load,contents $^ $@
+ifneq ($(origin APPEND_DTBS), undefined)
+	./append_dtbs.sh $@ $(APPEND_DTBS)
+endif
 
 uImage: matcher.bin
 	mkimage -A arm -O linux -C none -T kernel \

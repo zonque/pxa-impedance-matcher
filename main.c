@@ -3,13 +3,21 @@
 #include "print.h"
 #include "board.h"
 
+#ifdef APPEND_KERNEL
 extern __u32 _binary_input_zImage_start;
+#endif
+
+void main(__u32 dummy, __u32 machid, const struct tag *tags)
+	__attribute__((section(".text_main")));
 
 void main(__u32 dummy, __u32 machid, const struct tag *tags)
 {
 	struct board *board;
-	void (*start_kernel)(__u32 dummy, __u32 machid, void *dtb) =
-		(void *) &_binary_input_zImage_start;
+	void (*start_kernel)(__u32 dummy, __u32 machid, void *dtb);
+
+#ifdef APPEND_KERNEL
+	start_kernel = (void *) &_binary_input_zImage_start;
+#endif
 
 	putstr("++ Impedance Matcher (3rd stage loader) ++\n");
 
@@ -25,6 +33,9 @@ void main(__u32 dummy, __u32 machid, const struct tag *tags)
 	else
 		putstr("Not given.");
 	putstr("\n");
+
+	if (board->kernel)
+		start_kernel = board->kernel;
 
 	putstr("Booting into Linux kernel ...\n");
 	start_kernel(0, 0xffffffff, board->dtb);
