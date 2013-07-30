@@ -20,7 +20,7 @@ void main(__u32 dummy, __u32 machid, const struct tag *tags)
 	board = match_board(machid, tags);
 
 	putstr("Detected board: ");
-	putstr(board->name);
+	putstr(board->compatible);
 	putstr("\n");
 
 	putstr("Booting into Linux kernel ...\n");

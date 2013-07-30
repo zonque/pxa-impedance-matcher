@@ -5,7 +5,7 @@ struct board {
 	__u32		machid;
 	__u32		system_rev;
 	void		*dtb;
-	const char	*name;
+	const char	*compatible;
 };
 
 struct board *match_board(__u32 machid, const struct tag *);
