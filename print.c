@@ -1,16 +1,11 @@
 #include "types.h"
 #include "print.h"
+#include "serial.h"
 
 static inline void nop(int n)
 {
 	while (n--)
 		asm("nop");
-}
-
-static void __putch(char c)
-{
-	*(volatile __u32 *) 0x40100000 = c;
-	nop(100);
 }
 
 void putch(char c)
@@ -39,4 +34,3 @@ void putstr(const char *s)
 	while (*s)
 		putch(*s++);
 }
-

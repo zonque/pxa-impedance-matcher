@@ -3,12 +3,17 @@ LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
 LD=$(CROSS_COMPILE)ld
-LOADADDR=0xa0008000
+LOADADDR=0x10008000
 BINFMT=elf32-littlearm
 
 MFG=raumfeld
+UART=8250
+UART_BASE=0xf1012000
+
+CFLAGS+=-DUART_BASE=$(UART_BASE)
 
 BOARD_OBJ = board-$(MFG).o
+UART_OBJ = serial-$(UART).o
 
 COMMON_OBJS = \
 	main.o \
@@ -38,7 +43,7 @@ zimage.o: input/zImage
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(INPUT_OBJS)
+matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -o $@ $^
 
 matcher.bin: matcher
