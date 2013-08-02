@@ -4,6 +4,9 @@ legacy hardware that has a bootloader which is unable to boot DT kernels.
 It acts as chain loader which determines the correct hardware type and DTB
 blob.
 
+You should disable CONFIG_ARM_APPENDED_DTB in your kernel config.  The
+impedance-matcher should be viewed as a replacement for that option.
+
 It used to be completetly specific to PXA3xx based Raumfeld hardware, but
 was turned into a more generic kind of framework recently.
 
