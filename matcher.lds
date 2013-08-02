@@ -6,5 +6,4 @@ SECTIONS {
 	{
 		* (.bss);
 	}
-	PROVIDE (__end_of_image = .) ;
 }

@@ -1,12 +1,3 @@
-ifneq ($(origin APPEND_KERNEL), undefined)
-INPUT_OBJS=zimage.o
-CFLAGS+=-DAPPEND_KERNEL="$(APPEND_KERNEL)"
-endif
-
-ifneq ($(origin APPEND_DTBS), undefined)
-CFLAGS+=-DAPPEND_DTBS="$(APPEND_DTBS)"
-endif
-
 CFLAGS+=-Wall -ffreestanding
 LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
@@ -23,6 +14,7 @@ CFLAGS+=-DUART_BASE=$(UART_BASE)
 
 BOARD_OBJ = board-$(MFG).o
 UART_OBJ = serial-$(UART).o
+BINARY_OBJS =
 
 COMMON_OBJS = \
 	dtbs.o \
@@ -31,22 +23,33 @@ COMMON_OBJS = \
 	register.o \
 	string.o
 
+ifneq ($(origin APPEND_KERNEL), undefined)
+INPUT_OBJS=zimage.o
+CFLAGS+=-DAPPEND_KERNEL="$(APPEND_KERNEL)"
+endif
+
+ifneq ($(origin APPEND_DTBS), undefined)
+CFLAGS+=-DAPPEND_DTBS="$(APPEND_DTBS)"
+BINARY_OBJS+=dtbs-bin.o
+endif
+
 all: uImage
 
 zimage.o: $(APPEND_KERNEL)
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
 
+dtbs-bin.o: $(APPEND_DTBS)
+	./append_dtbs.sh dtbs.bin $^
+	$(OBJCOPY) -I binary -O $(BINFMT) -B arm dtbs.bin $@
+
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS)
+matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
 	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $^
 
 matcher.bin: matcher
 	$(OBJCOPY) -O binary --set-section-flags .bss=alloc,load,contents $^ $@
-ifneq ($(origin APPEND_DTBS), undefined)
-	./append_dtbs.sh $@ $(APPEND_DTBS)
-endif
 
 uImage: matcher.bin
 	mkimage -A arm -O linux -C none -T kernel \
