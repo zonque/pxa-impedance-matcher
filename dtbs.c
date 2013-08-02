@@ -27,10 +27,10 @@ void *find_dtb(void *dtbs, const char *compat)
 
 	while (d->magic == be_to_cpu(FDT_MAGIC)) {
 		if (find_str((char *)d, be_to_cpu(d->totalsize), compat) == 1)
-			break;
+			return d;
 
 		d = (struct fdt_header *)((char *)d + be_to_cpu(d->totalsize));
 	}
 
-	return d;
+	return NULL;
 }
