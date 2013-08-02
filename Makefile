@@ -29,7 +29,12 @@ CFLAGS+=-DAPPEND_DTBS="$(APPEND_DTBS)"
 BINARY_OBJS+=dtbs-bin.o
 endif
 
+ALL_OBJS=$(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
+
 all: uImage
+
+version.h:
+	./genver.sh >version.h
 
 zimage.o: $(APPEND_KERNEL)
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
@@ -41,8 +46,8 @@ dtbs-bin.o: $(APPEND_DTBS)
 %.o: %.c
 	$(GCC) $(CFLAGS) -c $^
 
-matcher: $(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
-	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $^
+matcher: version.h $(ALL_OBJS)
+	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $(ALL_OBJS)
 
 matcher.bin: matcher
 	$(OBJCOPY) -O binary --set-section-flags .bss=alloc,load,contents $^ $@
