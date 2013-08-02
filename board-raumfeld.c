@@ -21,51 +21,51 @@ static struct raum_board rboards[] = {
 	{
 		.machid		= 2413,
 		.system_rev	= 0,
-		.compatible	= "Raumfeld Controller, revision 0",
+		.compatible	= "raumfeld,pxa3xx-controller-rev-0",
 	},
 	{
 		.machid		= 2413,
 		.system_rev	= 1,
-		.compatible	= "Raumfeld Controller, revision 1",
+		.compatible	= "raumfeld,pxa3xx-controller-rev-1",
 	},
 	{
 		.machid		= 2413,
 		.system_rev	= 2,
-		.compatible	= "Raumfeld Controller, revision 2",
+		.compatible	= "raumfeld,pxa3xx-controller-rev-2",
 	},
 
 	/* Controller */
 	{
 		.machid		= 2414,
 		.system_rev	= 0,
-		.compatible	= "Raumfeld Connector, revision 0",
+		.compatible	= "raumfeld,pxa3xx-connector-rev-0",
 	},
 	{
 		.machid		= 2414,
 		.system_rev	= 1,
-		.compatible	= "Raumfeld Connector, revision 1",
+		.compatible	= "raumfeld,pxa3xx-connector-rev-1",
 	},
 	{
 		.machid		= 2414,
 		.system_rev	= 2,
-		.compatible	= "Raumfeld Connector, revision 2",
+		.compatible	= "raumfeld,pxa3xx-connector-rev-2",
 	},
 
 	/* Speaker */
 	{
 		.machid		= 2415,
 		.system_rev	= 0,
-		.compatible	= "Raumfeld Speaker, revision 0",
+		.compatible	= "raumfeld,pxa3xx-speaker-rev-0",
 	},
 	{
 		.machid		= 2415,
 		.system_rev	= 1,
-		.compatible	= "Raumfeld Speaker, revision 1",
+		.compatible	= "raumfeld,pxa3xx-speaker-rev-1",
 	},
 	{
 		.machid		= 2415,
 		.system_rev	= 2,
-		.compatible	= "Raumfeld Speaker, revision 2",
+		.compatible	= "raumfeld,pxa3xx-speaker-rev-2",
 	},
 	{ 0, 0, NULL }	/* sentinel */
 };
