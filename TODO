@@ -1,0 +1,16 @@
+Patches welcome for:
+
+  - Kconfig
+
+  - fdt parsing / editing
+
+      - adjust RAM size in dtb
+      - add info re initrd
+      - add commandline
+      - other?
+          - change register base address (Marvell Armada boards)
+          - more proper compatible string matching
+
+  - boards people use this for
+
+  - other serial drivers
