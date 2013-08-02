@@ -6,7 +6,7 @@
 #include "types.h"
 
 extern __u32 _binary_input_zImage_start;
-extern __u32 __end_of_image;
+extern __u32 _binary_dtbs_bin_start;
 
 struct board board;
 
@@ -144,7 +144,7 @@ struct board *match_board(__u32 machid, const struct tag *tags)
 
 	board.kernel = &_binary_input_zImage_start;
 	board.compatible = rboard->compatible;
-	board.dtb = find_dtb(&__end_of_image, rboard->compatible);
+	board.dtb = find_dtb(&_binary_dtbs_bin_start, rboard->compatible);
 
 	return &board;
 }
