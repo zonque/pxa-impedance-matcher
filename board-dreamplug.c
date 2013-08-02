@@ -11,7 +11,7 @@
  */
 
 extern __u32 _binary_input_zImage_start;
-extern __u32 __end_of_image;
+extern __u32 _binary_dtbs_bin_start;
 
 struct board board;
 const char *compat = "globalscale,dreamplug";
@@ -22,7 +22,7 @@ struct board *match_board(__u32 machid, const struct tag *tags)
 	/* testing zImage linked in and dtbs appended */
 	board.kernel = &_binary_input_zImage_start;
 	board.compatible = compat;
-	board.dtb = find_dtb(&__end_of_image, compat);
+	board.dtb = find_dtb(&_binary_dtbs_bin_start, compat);
 
 	return &board;
 }
