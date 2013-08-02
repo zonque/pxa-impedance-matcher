@@ -25,6 +25,7 @@ BOARD_OBJ = board-$(MFG).o
 UART_OBJ = serial-$(UART).o
 
 COMMON_OBJS = \
+	dtbs.o \
 	main.o \
 	print.o \
 	register.o \

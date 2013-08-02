@@ -1,38 +1,36 @@
 #include "atags.h"
 #include "board.h"
+#include "dtbs.h"
 #include "print.h"
 #include "register.h"
 #include "types.h"
 
 extern __u32 _binary_input_zImage_start;
-extern __u32 _binary_input_raumfeld_controller_0_dtb_start;
-extern __u32 _binary_input_raumfeld_controller_1_dtb_start;
-extern __u32 _binary_input_raumfeld_controller_2_dtb_start;
-extern __u32 _binary_input_raumfeld_connector_0_dtb_start;
-extern __u32 _binary_input_raumfeld_connector_1_dtb_start;
-extern __u32 _binary_input_raumfeld_connector_2_dtb_start;
-extern __u32 _binary_input_raumfeld_speaker_0_dtb_start;
-extern __u32 _binary_input_raumfeld_speaker_1_dtb_start;
-extern __u32 _binary_input_raumfeld_speaker_2_dtb_start;
+extern __u32 __end_of_image;
 
-static struct board boards[] = {
+struct board board;
+
+struct raum_board {
+	__u32		machid;
+	__u32		system_rev;
+	const char	*compatible;
+};
+
+static struct raum_board rboards[] = {
 	/* Controller */
 	{
 		.machid		= 2413,
 		.system_rev	= 0,
-		.dtb		= &_binary_input_raumfeld_controller_0_dtb_start,
 		.compatible	= "Raumfeld Controller, revision 0",
 	},
 	{
 		.machid		= 2413,
 		.system_rev	= 1,
-		.dtb		= &_binary_input_raumfeld_controller_1_dtb_start,
 		.compatible	= "Raumfeld Controller, revision 1",
 	},
 	{
 		.machid		= 2413,
 		.system_rev	= 2,
-		.dtb		= &_binary_input_raumfeld_controller_2_dtb_start,
 		.compatible	= "Raumfeld Controller, revision 2",
 	},
 
@@ -40,19 +38,16 @@ static struct board boards[] = {
 	{
 		.machid		= 2414,
 		.system_rev	= 0,
-		.dtb		= &_binary_input_raumfeld_connector_0_dtb_start,
 		.compatible	= "Raumfeld Connector, revision 0",
 	},
 	{
 		.machid		= 2414,
 		.system_rev	= 1,
-		.dtb		= &_binary_input_raumfeld_connector_1_dtb_start,
 		.compatible	= "Raumfeld Connector, revision 1",
 	},
 	{
 		.machid		= 2414,
 		.system_rev	= 2,
-		.dtb		= &_binary_input_raumfeld_connector_2_dtb_start,
 		.compatible	= "Raumfeld Connector, revision 2",
 	},
 
@@ -60,22 +55,19 @@ static struct board boards[] = {
 	{
 		.machid		= 2415,
 		.system_rev	= 0,
-		.dtb		= &_binary_input_raumfeld_speaker_0_dtb_start,
 		.compatible	= "Raumfeld Speaker, revision 0",
 	},
 	{
 		.machid		= 2415,
 		.system_rev	= 1,
-		.dtb		= &_binary_input_raumfeld_speaker_1_dtb_start,
 		.compatible	= "Raumfeld Speaker, revision 1",
 	},
 	{
 		.machid		= 2415,
 		.system_rev	= 2,
-		.dtb		= &_binary_input_raumfeld_speaker_2_dtb_start,
 		.compatible	= "Raumfeld Speaker, revision 2",
 	},
-	{ 0, 0, NULL, NULL }	/* sentinel */
+	{ 0, 0, NULL }	/* sentinel */
 };
 
 static void wait(__u32 ticks)
@@ -122,7 +114,7 @@ static void led_panic(void)
 struct board *match_board(__u32 machid, const struct tag *tags)
 {
 	const struct tag *t;
-	struct board *board;
+	struct raum_board *rboard;
 	__u32 system_rev = 0;
 
 	/* walk the atags to determine the system revision */
@@ -134,11 +126,12 @@ struct board *match_board(__u32 machid, const struct tag *tags)
 		}
 
 
-	for (board = boards; board->machid; board++)
-		if (board->machid == machid && board->system_rev == system_rev)
+	for (rboard = rboards; rboard->machid; rboard++)
+		if (rboard->machid == machid &&
+		    rboard->system_rev == system_rev)
 			break;
 
-	if (board->compatible == NULL) {
+	if (rboard->compatible == NULL) {
 		putstr("ERROR MATCHING BOARD!\n");
 		putstr("MACHID: 0x");
 		printhex(machid);
@@ -149,5 +142,9 @@ struct board *match_board(__u32 machid, const struct tag *tags)
 		led_panic(); /* doesn't return */
 	}
 
-	return board;
+	board.kernel = &_binary_input_zImage_start;
+	board.compatible = rboard->compatible;
+	board.dtb = find_dtb(&__end_of_image, rboard->compatible);
+
+	return &board;
 }

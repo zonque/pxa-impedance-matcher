@@ -5,8 +5,6 @@
 #include "atags.h"
 
 struct board {
-	__u32		machid;
-	__u32		system_rev;
 	void		*dtb;
 	void		*kernel;
 	const char	*compatible;

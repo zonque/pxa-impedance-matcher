@@ -7,6 +7,16 @@ int hexlut[1 + 'F' - '0'] = {
 	0xa, 0xb, 0xc, 0xd, 0xe, 0xf                      /* A - F */
 };
 
+int strlen(const char *str)
+{
+	const char *c = str;
+
+	while (*(c++))
+		;
+
+	return c - str;
+}
+
 int strncmp(const char *stra, const char *strb, int len)
 {
 	int diff=0;
