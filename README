@@ -7,3 +7,6 @@ blob.
 It used to be completetly specific to PXA3xx based Raumfeld hardware, but
 was turned into a more generic kind of framework recently.
 
+WARNING: PLEASE ONLY USE THIS TOOL AS A LAST RESORT OPTION FOR LEGACY
+HARDWARE, AND NOT AS AN OPTION FOR NEW DEVELOPMENTS. THE CLEARLY ADVISED
+WAY IS TO ADD PROPER DTB SUPPORT TO YOUR BOOTLOADER.
