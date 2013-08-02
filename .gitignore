@@ -1,6 +1,7 @@
 *.o
 *.bin
 cscope.*
+version.h
 matcher
 uImage
 input/zImage

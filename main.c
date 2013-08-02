@@ -2,6 +2,7 @@
 #include "atags.h"
 #include "print.h"
 #include "board.h"
+#include "version.h"
 
 #ifdef APPEND_KERNEL
 extern __u32 _binary_input_zImage_start;
@@ -19,7 +20,9 @@ void main(__u32 dummy, __u32 machid, const struct tag *tags)
 	start_kernel = (void *) &_binary_input_zImage_start;
 #endif
 
-	putstr("++ Impedance Matcher (3rd stage loader) ++\n");
+	putstr("++ Impedance Matcher ");
+	putstr(VERSION);
+	putstr(" (3rd stage loader) ++\n\n");
 
 	/*
 	 * error resp. is board-specific, so won't return on error
