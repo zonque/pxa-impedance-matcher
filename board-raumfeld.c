@@ -146,5 +146,12 @@ struct board *match_board(__u32 machid, const struct tag *tags)
 	board.compatible = rboard->compatible;
 	board.dtb = find_dtb(&_binary_dtbs_bin_start, rboard->compatible);
 
+	if (board.dtb == NULL) {
+		putstr("NO DTB BLOB FOUND FOR ");
+		putstr(rboard->compatible);
+		putstr("\n");
+		led_panic(); /* doesn't return */
+	}
+
 	return &board;
 }
