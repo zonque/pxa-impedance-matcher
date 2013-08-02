@@ -3,12 +3,8 @@ LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
 LD=$(CROSS_COMPILE)ld
-LOADADDR=0x10008000
-BINFMT=elf32-littlearm
 
-MFG=raumfeld
-UART=8250
-UART_BASE=0xf1012000
+include Makefile.config
 
 CFLAGS+=-DUART_BASE=$(UART_BASE)
 
