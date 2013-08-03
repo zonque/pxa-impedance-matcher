@@ -27,8 +27,8 @@ struct fdt_header {
 } __attribute__((packed));
 
 struct fdt_reserve_entry {
-	__u64 address;
-	__u64 size;
+	u64 address;
+	u64 size;
 };
 
 struct fdt_node_header {
