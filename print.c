@@ -19,7 +19,7 @@ void printhex(__u32 u)
 
 	for (i = 0; i < 8; i++) {
 		__u32 c = u >> (28 - (i * 4));
-		putch(hexdigets[c & 0xf]);
+		__putch(hexdigets[c & 0xf]);
 	}
 }
 
