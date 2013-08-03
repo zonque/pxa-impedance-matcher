@@ -10,13 +10,13 @@
  * trigger off of.
  */
 
-extern __u32 _binary_input_zImage_start;
-extern __u32 _binary_dtbs_bin_start;
+extern u32 _binary_input_zImage_start;
+extern u32 _binary_dtbs_bin_start;
 
 struct board board;
 const char *compat = "globalscale,dreamplug";
 
-struct board *match_board(__u32 machid, const struct tag *tags)
+struct board *match_board(u32 machid, const struct tag *tags)
 {
 
 	/* testing zImage linked in and dtbs appended */

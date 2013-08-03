@@ -6,9 +6,9 @@
 
 /* Yes, this is a dirty hack.  But it's simple, and fast. */
 
-int find_str(char *mem, __u32 memsz, const char *str)
+int find_str(char *mem, u32 memsz, const char *str)
 {
-	__u32 len = strlen(str);
+	u32 len = strlen(str);
 	const char *last = mem + memsz - len;
 	const char *p;
 

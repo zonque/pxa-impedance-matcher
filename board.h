@@ -10,6 +10,6 @@ struct board {
 	const char	*compatible;
 };
 
-struct board *match_board(__u32 machid, const struct tag *);
+struct board *match_board(u32 machid, const struct tag *);
 
 #endif

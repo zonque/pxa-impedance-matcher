@@ -6,7 +6,7 @@
 
 struct board genboard;
 
-struct board *match_board(__u32 machid, const struct tag *tags)
+struct board *match_board(u32 machid, const struct tag *tags)
 {
 	const struct tag *t;
 
@@ -21,14 +21,14 @@ struct board *match_board(__u32 machid, const struct tag *tags)
 
 	if (genboard.kernel) {
 		putstr("Kernel: 0x");
-		printhex((__u32)genboard.kernel);
+		printhex((u32)genboard.kernel);
 	} else
 		putstr("Kernel: Appended");
 	putstr("\n");
 
 	if (genboard.dtb) {
 		putstr("DTB:    0x");
-		printhex((__u32)genboard.dtb);
+		printhex((u32)genboard.dtb);
 	} else
 		putstr("** DTB Not Found! **");
 	putstr("\n");

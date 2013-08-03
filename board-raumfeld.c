@@ -5,14 +5,14 @@
 #include "register.h"
 #include "types.h"
 
-extern __u32 _binary_input_zImage_start;
-extern __u32 _binary_dtbs_bin_start;
+extern u32 _binary_input_zImage_start;
+extern u32 _binary_dtbs_bin_start;
 
 struct board board;
 
 struct raum_board {
-	__u32		machid;
-	__u32		system_rev;
+	u32		machid;
+	u32		system_rev;
 	const char	*compatible;
 };
 
@@ -70,9 +70,9 @@ static struct raum_board rboards[] = {
 	{ 0, 0, NULL }	/* sentinel */
 };
 
-static void wait(__u32 ticks)
+static void wait(u32 ticks)
 {
-	__u32 v;
+	u32 v;
 
 	/* OSCR */
 	writel(0, 0x40A00010);
@@ -89,9 +89,9 @@ static void led_init(void)
 	writel(0x18, 0x40e00010);	/* GPDR1 */
 }
 
-static void led_set(__u32 index, __u32 state)
+static void led_set(u32 index, u32 state)
 {
-	__u32 v = 1 << (index ? 3 : 4);
+	u32 v = 1 << (index ? 3 : 4);
 
 	if (state)
 		writel(v, 0x40e0001c);
@@ -111,11 +111,11 @@ static void led_panic(void)
 		wait(500000);
 	}
 }
-struct board *match_board(__u32 machid, const struct tag *tags)
+struct board *match_board(u32 machid, const struct tag *tags)
 {
 	const struct tag *t;
 	struct raum_board *rboard;
-	__u32 system_rev = 0;
+	u32 system_rev = 0;
 
 	/* walk the atags to determine the system revision */
 	for_each_tag(t, tags)

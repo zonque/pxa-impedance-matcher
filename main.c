@@ -5,16 +5,16 @@
 #include "version.h"
 
 #ifdef APPEND_KERNEL
-extern __u32 _binary_input_zImage_start;
+extern u32 _binary_input_zImage_start;
 #endif
 
-void main(__u32 dummy, __u32 machid, const struct tag *tags)
+void main(u32 dummy, u32 machid, const struct tag *tags)
 	__attribute__((section(".text_main")));
 
-void main(__u32 dummy, __u32 machid, const struct tag *tags)
+void main(u32 dummy, u32 machid, const struct tag *tags)
 {
 	struct board *board;
-	void (*start_kernel)(__u32 dummy, __u32 machid, void *dtb);
+	void (*start_kernel)(u32 dummy, u32 machid, void *dtb);
 
 #ifdef APPEND_KERNEL
 	start_kernel = (void *) &_binary_input_zImage_start;

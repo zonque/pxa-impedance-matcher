@@ -6,15 +6,15 @@
 #define ATAG_NONE       0x00000000
 
 struct tag_header {
-	__u32 size;
-	__u32 tag;
+	u32 size;
+	u32 tag;
 };
 
 /* board revision */
 #define ATAG_REVISION   0x54410007
 
 struct tag_revision {
-	__u32 rev;
+	u32 rev;
 };
 
 /* command line */
@@ -32,7 +32,7 @@ struct tag {
 	} u;
 };
 
-#define tag_next(t)     ((struct tag *)((__u32 *)(t) + (t)->hdr.size))
+#define tag_next(t)     ((struct tag *)((u32 *)(t) + (t)->hdr.size))
 #define for_each_tag(t,base)            \
 	for (t = base; t->hdr.size; t = tag_next(t))
 

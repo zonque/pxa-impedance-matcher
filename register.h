@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-void writel(__u32, __u32);
-__u32 readl(__u32);
+void writel(u32, u32);
+u32 readl(u32);
 
 #define BIT(nr)         (1UL << (nr))
 

@@ -1,11 +1,11 @@
 #include "types.h"
 
-inline void writel(__u32 val, __u32 addr)
+inline void writel(u32 val, u32 addr)
 {
-	*(volatile __u32 *) addr = val;
+	*(volatile u32 *) addr = val;
 }
 
-inline __u32 readl(__u32 addr)
+inline u32 readl(u32 addr)
 {
-	return *(volatile __u32 *) addr;
+	return *(volatile u32 *) addr;
 }
