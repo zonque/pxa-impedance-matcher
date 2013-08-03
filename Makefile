@@ -20,8 +20,8 @@ COMMON_OBJS = \
 	string.o
 
 ifneq ($(origin APPEND_KERNEL), undefined)
-INPUT_OBJS=zimage.o
 CFLAGS+=-DAPPEND_KERNEL="$(APPEND_KERNEL)"
+INPUT_OBJS=zimage.o
 endif
 
 ifneq ($(origin APPEND_DTBS), undefined)
