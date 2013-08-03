@@ -2,12 +2,6 @@
 #include "print.h"
 #include "serial.h"
 
-static inline void nop(int n)
-{
-	while (n--)
-		asm("nop");
-}
-
 void putch(char c)
 {
 	__putch(c);
