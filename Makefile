@@ -58,7 +58,7 @@ uImage: matcher.bin
 		-n "ImpedanceMatcher (3rd stage)" -d $^ $@
 
 clean:
-	rm -fr *.bin matcher *.o uImage
+	rm -fr *.bin matcher *.o uImage version.h
 
 distclean: clean
 	rm -fr cscope.*
