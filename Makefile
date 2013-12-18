@@ -8,6 +8,7 @@ include Makefile.config
 
 CFLAGS+=-DUART_BASE=$(UART_BASE)
 CFLAGS+=-DNR_BANKS=$(NR_BANKS)
+CFLAGS+=-DUART_PORT=$(UART_PORT)
 
 BOARD_OBJ = board-$(MFG).o
 UART_OBJ = serial-$(UART).o
