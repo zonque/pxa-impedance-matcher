@@ -1,4 +1,4 @@
-CFLAGS+=-Wall -ffreestanding
+CFLAGS+=-Wall -ffreestanding -marm
 LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
