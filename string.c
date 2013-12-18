@@ -10,7 +10,7 @@ int strlen(const char *str)
 {
 	const char *c = str;
 
-	while (*(c++))
+	while (*c++)
 		;
 
 	return c - str;
@@ -23,7 +23,7 @@ int strncmp(const char *stra, const char *strb, int len)
 	const char *b = strb;
 
 	while ((a - stra) < len)
-		diff += *(a++) - *(b++);
+		diff += *a++ - *b++;
 
 	return diff;
 }
