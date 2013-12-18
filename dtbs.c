@@ -30,6 +30,10 @@ void *find_dtb(void *dtbs, const char *compat)
 			return d;
 
 		d = (struct fdt_header *)((char *)d + be_to_cpu(d->totalsize));
+
+		/* align to 4-bytes */
+		d = (struct fdt_header *)((((unsigned int)d + 0x3) & ~0x3));
+
 	}
 
 	return NULL;
