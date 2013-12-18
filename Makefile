@@ -7,6 +7,7 @@ LD=$(CROSS_COMPILE)ld
 include Makefile.config
 
 CFLAGS+=-DUART_BASE=$(UART_BASE)
+CFLAGS+=-DNR_BANKS=$(NR_BANKS)
 
 BOARD_OBJ = board-$(MFG).o
 UART_OBJ = serial-$(UART).o
@@ -29,7 +30,15 @@ CFLAGS+=-DAPPEND_DTBS="$(APPEND_DTBS)"
 BINARY_OBJS+=dtbs-bin.o
 endif
 
+ifneq ($(origin LIBFDT), undefined)
+CFLAGS+=-DLIBFDT="$(LIBFDT)"
+LIBS = -lfdt
+LDFLAGS+=-L./libfdt -lfdt
+endif
+
 ALL_OBJS=$(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
+
+export CFLAGS GCC CROSS_COMPILE
 
 all: uImage
 
@@ -39,6 +48,8 @@ version.h:
 zimage.o: $(APPEND_KERNEL)
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
 
+	$(MAKE) -C libfdt
+
 dtbs-bin.o: $(APPEND_DTBS)
 	./append_dtbs.sh dtbs.bin $^
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm dtbs.bin $@
@@ -47,7 +58,7 @@ dtbs-bin.o: $(APPEND_DTBS)
 	$(GCC) $(CFLAGS) -c $^
 
 matcher: version.h $(ALL_OBJS)
-	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $(ALL_OBJS)
+	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $(ALL_OBJS) $(LIBS)
 
 matcher.bin: matcher
 	$(OBJCOPY) -O binary --set-section-flags .bss=alloc,load,contents $^ $@

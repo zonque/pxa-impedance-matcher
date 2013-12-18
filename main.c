@@ -37,6 +37,10 @@ void main(u32 dummy, u32 machid, const struct tag *tags)
 		putstr("Not given.");
 	putstr("\n");
 
+#ifdef LIBFDT
+	atags_to_fdt((void *)tags, board->dtb, 0x100000);
+#endif
+
 	if (board->kernel)
 		start_kernel = board->kernel;
 

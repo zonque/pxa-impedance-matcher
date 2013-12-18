@@ -36,4 +36,6 @@ struct tag {
 #define for_each_tag(t,base)            \
 	for (t = base; t->hdr.size; t = tag_next(t))
 
+int atags_to_fdt(void *atag_list, void *fdt, int total_space);
+
 #endif /* _ATAG_H */
