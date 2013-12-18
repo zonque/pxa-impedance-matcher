@@ -1,0 +1,13 @@
+# config for Exynos boards
+
+CROSS_COMPILE=arm-linux-gnueabi-
+MFG=exynos
+UART=exynos
+UART_PORT=2
+BINFMT=elf32-littlearm
+LOADADDR=0x41008000
+UART_BASE=0x40100000
+APPEND_KERNEL=input/zImage
+APPEND_DTBS=input/padd32k.bin input/exynos4210-trats.dtb input/exynos4412-trats2.dtb
+LIBFDT = y
+NR_BANKS=8
