@@ -18,14 +18,18 @@ int strlen(const char *str)
 
 int strncmp(const char *stra, const char *strb, int len)
 {
-	int diff=0;
-	const char *a = stra;
-	const char *b = strb;
+	unsigned char c1, c2;
 
-	while ((a - stra) < len)
-		diff += *a++ - *b++;
-
-	return diff;
+	while (len) {
+		c1 = *stra++;
+		c2 = *strb++;
+		if (c1 != c2)
+			return c1 < c2 ? -1 : 1;
+		if (!c1)
+			break;
+		len--;
+	}
+	return 0;
 }
 
 void *gethexaddr(const char *str, const char **end)
