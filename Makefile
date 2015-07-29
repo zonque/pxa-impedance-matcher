@@ -75,6 +75,7 @@ uImage: matcher.bin
 
 clean:
 	rm -fr *.bin matcher *.o uImage version.h
+	$(MAKE) -C libfdt clean
 
 distclean: clean
 	rm -fr cscope.*
