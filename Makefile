@@ -4,7 +4,11 @@ GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
 LD=$(CROSS_COMPILE)ld
 
+ifeq ($(CFG_FILE),)
 include Makefile.config
+else
+include $(CFG_FILE)
+endif
 
 CFLAGS+=-DUART_BASE=$(UART_BASE)
 CFLAGS+=-DNR_BANKS=$(NR_BANKS)
@@ -71,6 +75,7 @@ uImage: matcher.bin
 
 clean:
 	rm -fr *.bin matcher *.o uImage version.h
+	$(MAKE) -C libfdt clean
 
 distclean: clean
 	rm -fr cscope.*
