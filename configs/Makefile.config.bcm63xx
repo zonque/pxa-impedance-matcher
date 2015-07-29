@@ -1,0 +1,12 @@
+# config for Broadcom BCM63xx (ARM-based) xDSL boards
+
+MFG=bcm63xx
+UART=bcm63xx
+UART_PORT=0
+BINFMT=elf32-littlearm
+LOADADDR=0x8000
+UART_BASE=0xfffe8600
+APPEND_KERNEL=input/zImage
+APPEND_DTBS=input/bcm963138dvt.dtb
+LIBFDT = y
+NR_BANKS=8
