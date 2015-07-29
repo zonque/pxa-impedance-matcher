@@ -6,3 +6,4 @@ matcher
 uImage
 input/zImage
 input/*.dtb
+*.a
