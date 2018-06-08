@@ -5,14 +5,15 @@
 #include "version.h"
 
 
-void main(u32 dummy, u32 machid, const struct tag *tags)
+void main(u32 dummy, u32 machid, struct tag *tags)
 	__attribute__((naked))
 	__attribute__((section(".text_main")));
 
-void main(u32 dummy, u32 machid, const struct tag *tags)
+void main(u32 dummy, u32 machid, struct tag *tags)
 {
 	struct board *board;
 	void (*start_kernel)(u32 dummy, u32 machid, void *dtb);
+	void *dtb = tags;
 
 	asm volatile("mov sp, lr");
 
@@ -45,6 +46,15 @@ void main(u32 dummy, u32 machid, const struct tag *tags)
 	if (board->kernel)
 		start_kernel = board->kernel;
 
+	if (board->dtb) {
+#ifdef RELOCATE_DTB
+		dtb = RELOCATE_DTB;
+		memcpy(dtb, board->dtb, board->dtb_size);
+#else
+		dtb = board->dtb;
+#endif
+	}
+
 	putstr("Booting into Linux kernel ...\n");
-	start_kernel(0, 0xffffffff, board->dtb);
+	start_kernel(0, 0xffffffff, dtb);
 }

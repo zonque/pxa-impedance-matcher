@@ -41,6 +41,10 @@ LIBS = -lfdt
 LDFLAGS+=-L./libfdt -lfdt
 endif
 
+ifneq ($(origin RELOCATE_DTB), undefined)
+CFLAGS+=-DRELOCATE_DTB=$(RELOCATE_DTB)
+endif
+
 ALL_OBJS=$(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
 
 export CFLAGS GCC CROSS_COMPILE
