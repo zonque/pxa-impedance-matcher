@@ -6,12 +6,15 @@
 
 
 void main(u32 dummy, u32 machid, const struct tag *tags)
+	__attribute__((naked))
 	__attribute__((section(".text_main")));
 
 void main(u32 dummy, u32 machid, const struct tag *tags)
 {
 	struct board *board;
 	void (*start_kernel)(u32 dummy, u32 machid, void *dtb);
+
+	asm volatile("mov sp, lr");
 
 #ifdef APPEND_KERNEL
 	extern u32 _binary_input_zImage_start;
