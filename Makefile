@@ -1,4 +1,4 @@
-CFLAGS+=-Wall -ffreestanding -marm
+CFLAGS+=-Wall -ffreestanding -marm -fpic -mno-single-pic-base -fno-builtin -fno-stack-protector -fomit-frame-pointer
 LDFLAGS=-static -nostdlib
 GCC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
