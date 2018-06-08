@@ -6,6 +6,7 @@
 
 struct board {
 	void		*dtb;
+	size_t		dtb_size;
 	void		*kernel;
 	const char	*compatible;
 };

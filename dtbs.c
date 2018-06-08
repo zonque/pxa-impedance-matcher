@@ -21,19 +21,22 @@ int find_str(char *mem, u32 memsz, const char *str)
 	return 0;
 }
 
-void *find_dtb(void *dtbs, const char *compat)
+void *find_dtb(void *dtbs, const char *compat, size_t *dtb_size)
 {
 	struct fdt_header *d = (struct fdt_header *)dtbs;
 
 	while (d->magic == be_to_cpu(FDT_MAGIC)) {
-		if (find_str((char *)d, be_to_cpu(d->totalsize), compat) == 1)
+		size_t size = be_to_cpu(d->totalsize);
+
+		if (find_str((char *)d, size, compat) == 1)
 			return d;
 
-		d = (struct fdt_header *)((char *)d + be_to_cpu(d->totalsize));
+		d = (struct fdt_header *)((char *)d + size);
 
 		/* align to 4-bytes */
 		d = (struct fdt_header *)((((unsigned int)d + 0x3) & ~0x3));
 
+		*dtb_size = size;
 	}
 
 	return NULL;

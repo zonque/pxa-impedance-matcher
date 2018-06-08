@@ -124,7 +124,7 @@ struct board *match_board(u32 machid, const struct tag *tags)
 
 	board.kernel = &_binary_input_zImage_start;
 	board.compatible = rboard->compatible;
-	board.dtb = find_dtb(&_binary_dtbs_bin_start, rboard->compatible);
+	board.dtb = find_dtb(&_binary_dtbs_bin_start, rboard->compatible, &board.dtb_size);
 
 	if (board.dtb == NULL) {
 		putstr("NO DTB BLOB FOUND FOR ");
