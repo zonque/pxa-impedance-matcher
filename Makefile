@@ -51,8 +51,8 @@ version.h:
 	./genver.sh >version.h
 
 zimage.o: $(APPEND_KERNEL)
-	$(OBJCOPY) -I binary -O $(BINFMT) -B arm $^ $@
-
+	cp $(APPEND_KERNEL) input/zImage
+	$(OBJCOPY) -I binary -O $(BINFMT) -B arm input/zImage $@
 	$(MAKE) -C libfdt
 
 dtbs-bin.o: $(APPEND_DTBS)
