@@ -10,62 +10,42 @@ extern u32 _binary_dtbs_bin_start;
 
 struct board board;
 
-struct raum_board {
+struct raumfeld_board {
 	u32		machid;
-	u32		system_rev;
+	u16		system_rev_upper;
 	const char	*compatible;
 };
 
-static struct raum_board rboards[] = {
+static struct raumfeld_board rboards[] = {
 	/* Controller */
 	{
-		.machid		= 2413,
-		.system_rev	= 0,
-		.compatible	= "raumfeld,pxa3xx-controller-rev-0",
-	},
-	{
-		.machid		= 2413,
-		.system_rev	= 1,
-		.compatible	= "raumfeld,pxa3xx-controller-rev-1",
-	},
-	{
-		.machid		= 2413,
-		.system_rev	= 2,
-		.compatible	= "raumfeld,pxa3xx-controller-rev-2",
+		.machid			= 2413,
+		.system_rev_upper	= 0,
+		.compatible		= "raumfeld,raumfeld-controller-pxa303",
 	},
 
-	/* Controller */
+	/* Connector */
 	{
-		.machid		= 2414,
-		.system_rev	= 0,
-		.compatible	= "raumfeld,pxa3xx-connector-rev-0",
-	},
-	{
-		.machid		= 2414,
-		.system_rev	= 1,
-		.compatible	= "raumfeld,pxa3xx-connector-rev-1",
-	},
-	{
-		.machid		= 2414,
-		.system_rev	= 2,
-		.compatible	= "raumfeld,pxa3xx-connector-rev-2",
+		.machid			= 2414,
+		.system_rev_upper	= 0,
+		.compatible		= "raumfeld,raumfeld-connector-pxa303",
 	},
 
 	/* Speaker */
 	{
-		.machid		= 2415,
-		.system_rev	= 0,
-		.compatible	= "raumfeld,pxa3xx-speaker-rev-0",
+		.machid			= 2415,
+		.system_rev_upper	= 0,
+		.compatible		= "raumfeld,raumfeld-speaker-s-pxa303",
 	},
 	{
-		.machid		= 2415,
-		.system_rev	= 1,
-		.compatible	= "raumfeld,pxa3xx-speaker-rev-1",
+		.machid			= 2415,
+		.system_rev_upper	= 1,
+		.compatible		= "raumfeld,raumfeld-speaker-m-pxa303",
 	},
 	{
-		.machid		= 2415,
-		.system_rev	= 2,
-		.compatible	= "raumfeld,pxa3xx-speaker-rev-2",
+		.machid			= 2415,
+		.system_rev_upper	= 2,
+		.compatible		= "raumfeld,raumfeld-speaker-one-pxa303",
 	},
 	{ 0, 0, NULL }	/* sentinel */
 };
@@ -114,21 +94,21 @@ static void led_panic(void)
 struct board *match_board(u32 machid, const struct tag *tags)
 {
 	const struct tag *t;
-	struct raum_board *rboard;
+	struct raumfeld_board *rboard;
 	u32 system_rev = 0;
 
 	/* walk the atags to determine the system revision */
-	for_each_tag(t, tags)
+	for_each_tag(t, tags) {
 		switch (t->hdr.tag) {
 			case ATAG_REVISION:
 				system_rev = t->u.rev.rev;
 				break;
 		}
-
+	}
 
 	for (rboard = rboards; rboard->machid; rboard++)
-		if (rboard->machid == machid &&
-		    rboard->system_rev == system_rev)
+		if ((rboard->machid == machid) &&
+		    (rboard->system_rev_upper == (system_rev >> 8)))
 			break;
 
 	if (rboard->compatible == NULL) {
