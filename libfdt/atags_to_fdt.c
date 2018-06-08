@@ -9,7 +9,7 @@
 #define do_extend_cmdline 0
 #endif
 
-/*#define NR_BANKS 8*/
+#define NR_BANKS 8
 
 static int node_offset(void *fdt, const char *node_path)
 {
