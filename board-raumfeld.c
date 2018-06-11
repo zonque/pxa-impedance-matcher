@@ -1,6 +1,7 @@
 #include "atags.h"
 #include "board.h"
 #include "dtbs.h"
+#include "libfdt.h"
 #include "print.h"
 #include "register.h"
 #include "types.h"
@@ -8,13 +9,28 @@
 extern u32 _binary_input_zImage_start;
 extern u32 _binary_dtbs_bin_start;
 
+static u32 system_rev;
 struct board board;
 
 struct raumfeld_board {
 	u32		machid;
 	u16		system_rev_upper;
 	const char	*compatible;
+	void		(*fixup_dtb)(const struct board *);
 };
+
+static void raumfeld_fixup_dtb_common(const struct board *board)
+{
+	int off;
+
+	off = fdt_path_offset(board->dtb, "/");
+	if (off < 0) {
+		putstr("Unable to locate /system-revision!\n");
+		return;
+	}
+
+	fdt_setprop_inplace_u32(board->dtb, off, "system-revision", system_rev & 0xff);
+}
 
 static struct raumfeld_board rboards[] = {
 	/* Controller */
@@ -22,6 +38,7 @@ static struct raumfeld_board rboards[] = {
 		.machid			= 2413,
 		.system_rev_upper	= 0,
 		.compatible		= "raumfeld,raumfeld-controller-pxa303",
+		.fixup_dtb		= &raumfeld_fixup_dtb_common,
 	},
 
 	/* Connector */
@@ -29,6 +46,7 @@ static struct raumfeld_board rboards[] = {
 		.machid			= 2414,
 		.system_rev_upper	= 0,
 		.compatible		= "raumfeld,raumfeld-connector-pxa303",
+		.fixup_dtb		= &raumfeld_fixup_dtb_common,
 	},
 
 	/* Speaker */
@@ -36,16 +54,19 @@ static struct raumfeld_board rboards[] = {
 		.machid			= 2415,
 		.system_rev_upper	= 0,
 		.compatible		= "raumfeld,raumfeld-speaker-s-pxa303",
+		.fixup_dtb		= &raumfeld_fixup_dtb_common,
 	},
 	{
 		.machid			= 2415,
 		.system_rev_upper	= 1,
 		.compatible		= "raumfeld,raumfeld-speaker-m-pxa303",
+		.fixup_dtb		= &raumfeld_fixup_dtb_common,
 	},
 	{
 		.machid			= 2415,
 		.system_rev_upper	= 2,
 		.compatible		= "raumfeld,raumfeld-speaker-one-pxa303",
+		.fixup_dtb		= &raumfeld_fixup_dtb_common,
 	},
 	{ 0, 0, NULL }	/* sentinel */
 };
@@ -95,7 +116,6 @@ struct board *match_board(u32 machid, const struct tag *tags)
 {
 	const struct tag *t;
 	struct raumfeld_board *rboard;
-	u32 system_rev = 0;
 
 	/* walk the atags to determine the system revision */
 	for_each_tag(t, tags) {
@@ -124,6 +144,7 @@ struct board *match_board(u32 machid, const struct tag *tags)
 
 	board.kernel = &_binary_input_zImage_start;
 	board.compatible = rboard->compatible;
+	board.fixup_dtb = rboard->fixup_dtb;
 	board.dtb = find_dtb(&_binary_dtbs_bin_start, rboard->compatible, &board.dtb_size);
 
 	if (board.dtb == NULL) {
