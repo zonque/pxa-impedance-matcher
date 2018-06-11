@@ -50,10 +50,14 @@ void main(u32 dummy, u32 machid, struct tag *tags)
 #ifdef RELOCATE_DTB
 		dtb = RELOCATE_DTB;
 		memcpy(dtb, board->dtb, board->dtb_size);
+		board->dtb = dtb;
 #else
 		dtb = board->dtb;
 #endif
 	}
+
+	if (board->fixup_dtb)
+		board->fixup_dtb(board);
 
 	putstr("Booting into Linux kernel ...\n");
 	start_kernel(0, 0xffffffff, dtb);
