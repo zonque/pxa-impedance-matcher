@@ -36,8 +36,7 @@ BINARY_OBJS+=dtbs-bin.o
 endif
 
 ifneq ($(origin LIBFDT), undefined)
-CFLAGS+=-DLIBFDT="$(LIBFDT)"
-LIBS = -lfdt
+CFLAGS+=-DLIBFDT="$(LIBFDT)" -I./libfdt
 LDFLAGS+=-L./libfdt -lfdt
 endif
 
@@ -67,7 +66,7 @@ dtbs-bin.o: $(APPEND_DTBS)
 	$(GCC) $(CFLAGS) -c $^
 
 matcher: version.h $(ALL_OBJS)
-	$(LD) $(LDFLAGS) -T matcher.lds -Ttext $(LOADADDR) -o $@ $(ALL_OBJS) $(LIBS)
+	$(LD) -T matcher.lds -Ttext $(LOADADDR) -o $@ $(ALL_OBJS) $(LDFLAGS)
 
 matcher.bin: matcher
 	$(OBJCOPY) -O binary --set-section-flags .bss=alloc,load,contents $^ $@
