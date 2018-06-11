@@ -39,7 +39,7 @@ void main(u32 dummy, u32 machid, struct tag *tags)
 		putstr("Not given.");
 	putstr("\n");
 
-#ifdef LIBFDT
+#ifdef LIBFDT_AUTO
 	atags_to_fdt((void *)tags, board->dtb, 0x100000);
 #endif
 
