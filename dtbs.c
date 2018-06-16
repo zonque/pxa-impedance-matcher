@@ -28,16 +28,17 @@ void *find_dtb(void *dtbs, const char *compat, size_t *dtb_size)
 	while (d->magic == be_to_cpu(FDT_MAGIC)) {
 		size_t size = be_to_cpu(d->totalsize);
 
-		if (find_str((char *)d, size, compat) == 1)
+		if (find_str((char *)d, size, compat) == 1) {
+			*dtb_size = size;
 			return d;
+		}
 
 		d = (struct fdt_header *)((char *)d + size);
 
 		/* align to 4-bytes */
 		d = (struct fdt_header *)((((unsigned int)d + 0x3) & ~0x3));
-
-		*dtb_size = size;
 	}
 
+	*dtb_size = 0;
 	return NULL;
 }
