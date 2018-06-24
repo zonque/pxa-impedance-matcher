@@ -25,11 +25,39 @@ static void raumfeld_fixup_dtb_common(const struct board *board)
 
 	off = fdt_path_offset(board->dtb, "/");
 	if (off < 0) {
-		putstr("Unable to locate /system-revision!\n");
+		putstr("Unable to locate /!\n");
 		return;
 	}
 
 	fdt_setprop_inplace_u32(board->dtb, off, "system-revision", system_rev & 0xff);
+}
+
+static void raumfeld_fixup_dtb_controller(const struct board *board)
+{
+	int off;
+	const char *node;
+
+	raumfeld_fixup_dtb_common(board);
+
+        /*
+	 * Hardware revision 2 has the backlight regulator controlled
+         * by an LT3593, earlier and later devices use PWM for that.
+         */
+
+	if (system_rev == 2)
+		node = "/backlight-controller";
+	else
+		node = "/backlight-controller-pwm";
+
+	off = fdt_path_offset(board->dtb, node);
+	if (off < 0) {
+		putstr("Unable to locate ");
+		putstr(node);
+		putstr("!\n");
+	} else {
+		/* override the string "disabled", and pad the string with zero-bytes */
+		fdt_setprop_inplace(board->dtb, off, "status", "okay\0\0\0\0", 9);
+	}
 }
 
 static struct raumfeld_board rboards[] = {
@@ -38,7 +66,7 @@ static struct raumfeld_board rboards[] = {
 		.machid			= 2413,
 		.system_rev_upper	= 0,
 		.compatible		= "raumfeld,raumfeld-controller-pxa303",
-		.fixup_dtb		= &raumfeld_fixup_dtb_common,
+		.fixup_dtb		= &raumfeld_fixup_dtb_controller,
 	},
 
 	/* Connector */
@@ -64,7 +92,7 @@ static struct raumfeld_board rboards[] = {
 	},
 	{
 		.machid			= 2415,
-		.system_rev_upper	= 2,
+		.system_rev_upper	= 4,
 		.compatible		= "raumfeld,raumfeld-speaker-one-pxa303",
 		.fixup_dtb		= &raumfeld_fixup_dtb_common,
 	},
