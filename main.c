@@ -48,7 +48,7 @@ void main(u32 dummy, u32 machid, struct tag *tags)
 
 	if (board->dtb) {
 #ifdef RELOCATE_DTB
-		dtb = RELOCATE_DTB;
+		dtb = (void *) RELOCATE_DTB;
 		memcpy(dtb, board->dtb, board->dtb_size);
 		board->dtb = dtb;
 #else
