@@ -29,7 +29,7 @@ static void raumfeld_fixup_dtb_common(const struct board *board)
 		return;
 	}
 
-	fdt_setprop_inplace_u32(board->dtb, off, "system-revision", system_rev & 0xff);
+	fdt_setprop_inplace_u32(board->dtb, off, "hw-revision", system_rev & 0xff);
 }
 
 static void raumfeld_fixup_dtb_controller(const struct board *board)
