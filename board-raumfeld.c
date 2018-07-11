@@ -5,6 +5,7 @@
 #include "print.h"
 #include "register.h"
 #include "types.h"
+#include "string.h"
 
 extern u32 _binary_input_zImage_start;
 extern u32 _binary_dtbs_bin_start;
@@ -140,26 +141,70 @@ static void led_panic(void)
 		wait(500000);
 	}
 }
+
 struct board *match_board(u32 machid, const struct tag *tags)
 {
-	const struct tag *t;
-	struct raumfeld_board *rboard;
+	struct raumfeld_board *rboard = NULL;
 
-	/* walk the atags to determine the system revision */
-	for_each_tag(t, tags) {
-		switch (t->hdr.tag) {
-			case ATAG_REVISION:
-				system_rev = t->u.rev.rev;
-				break;
+	if (machid == 0xffffffff) {
+		/*
+		 * If we got a device tree passed in from kexec or such, the
+		 * machid will be 0xffffffff. In this case, we can just cast
+		 * the atags pointer to our dtb and then read the 'compatible'
+		 * string from that dtb. We need to look up a board from our
+		 * own dtbs that match the same string so the DTB is
+		 * up-to-date.
+		 */
+
+		const void *dtb = tags;
+		const void *val;
+	        int off;
+
+	        off = fdt_path_offset(dtb, "/");
+
+		val = fdt_getprop(dtb, off, "hw-revision", NULL);
+		if (val)
+			system_rev = *(u32 *)val;
+		else
+			putstr("Error reading /hw-revision from DTB!\n");
+
+		val = fdt_getprop(dtb, off, "compatible", NULL);
+		if (val) {
+			putstr("Got compatible string from passed DTB: ");
+			putstr(val);
+			putstr("\n");
+
+			for (rboard = rboards; rboard->compatible; rboard++)
+				if (!strncmp(rboard->compatible, val, strlen(rboard->compatible)))
+					break;
+		} else {
+			putstr("Error reading /compatible from DTB!\n");
 		}
+	} else {
+		/*
+		 * Otherwise,  walk the atags to determine the system revision
+		 * and determine a dtb from the available boards that matches
+		 * the mach_id/system_rev combination.
+		 */
+
+		const struct tag *t;
+
+		/* walk the atags to determine the system revision */
+		for_each_tag(t, tags) {
+			switch (t->hdr.tag) {
+				case ATAG_REVISION:
+					system_rev = t->u.rev.rev;
+					break;
+			}
+		}
+
+		for (rboard = rboards; rboard->machid; rboard++)
+			if ((rboard->machid == machid) &&
+			    (rboard->system_rev_upper == (system_rev >> 8)))
+				break;
 	}
 
-	for (rboard = rboards; rboard->machid; rboard++)
-		if ((rboard->machid == machid) &&
-		    (rboard->system_rev_upper == (system_rev >> 8)))
-			break;
-
-	if (rboard->compatible == NULL) {
+	if (!rboard || !rboard->compatible) {
 		putstr("ERROR MATCHING BOARD!\n");
 		putstr("MACHID: 0x");
 		printhex(machid);
