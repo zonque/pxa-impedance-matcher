@@ -1,8 +1,9 @@
-CFLAGS+=-Wall -ffreestanding -marm -fpic -mno-single-pic-base -fno-builtin -fno-stack-protector -fomit-frame-pointer
-LDFLAGS=-static -nostdlib
-GCC=$(CROSS_COMPILE)gcc
-OBJCOPY=$(CROSS_COMPILE)objcopy
-LD=$(CROSS_COMPILE)ld
+CFLAGS += -Wall -ffreestanding -marm -fpic -mno-single-pic-base -fno-builtin -fno-stack-protector -fomit-frame-pointer
+LDFLAGS = -static -nostdlib
+GCC = $(CROSS_COMPILE)gcc
+OBJCOPY = $(CROSS_COMPILE)objcopy
+LD = $(CROSS_COMPILE)ld
+MKIMAGE ?= $(MKIMAGE)
 
 ifeq ($(CFG_FILE),)
 include Makefile.config
@@ -26,25 +27,25 @@ COMMON_OBJS = \
 	string.o
 
 ifneq ($(origin APPEND_KERNEL), undefined)
-CFLAGS+=-DAPPEND_KERNEL="$(APPEND_KERNEL)"
-INPUT_OBJS=zimage.o
+CFLAGS += -DAPPEND_KERNEL="$(APPEND_KERNEL)"
+INPUT_OBJS = zimage.o
 endif
 
 ifneq ($(origin APPEND_DTBS), undefined)
-CFLAGS+=-DAPPEND_DTBS="$(APPEND_DTBS)"
-BINARY_OBJS+=dtbs-bin.o
+CFLAGS += -DAPPEND_DTBS="$(APPEND_DTBS)"
+BINARY_OBJS += dtbs-bin.o
 endif
 
 ifneq ($(origin LIBFDT), undefined)
-CFLAGS+=-DLIBFDT="$(LIBFDT)" -I./libfdt
-LDFLAGS+=-L./libfdt -lfdt
+CFLAGS += -DLIBFDT="$(LIBFDT)" -I./libfdt
+LDFLAGS += -L./libfdt -lfdt
 endif
 
 ifneq ($(origin RELOCATE_DTB), undefined)
-CFLAGS+=-DRELOCATE_DTB=$(RELOCATE_DTB)
+CFLAGS += -DRELOCATE_DTB=$(RELOCATE_DTB)
 endif
 
-ALL_OBJS=$(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
+ALL_OBJS = $(COMMON_OBJS) $(BOARD_OBJ) $(UART_OBJ) $(INPUT_OBJS) $(BINARY_OBJS)
 
 export CFLAGS GCC CROSS_COMPILE
 
@@ -72,7 +73,7 @@ matcher.bin: matcher
 	$(OBJCOPY) -O binary --set-section-flags .bss=alloc,load,contents $^ $@
 
 uImage: matcher.bin
-	mkimage -A arm -O linux -C none -T kernel \
+	$(MKIMAGE) -A arm -O linux -C none -T kernel \
 		-a $(LOADADDR) -e $(LOADADDR) \
 		-n "ImpedanceMatcher (3rd stage)" -d $^ $@
 
