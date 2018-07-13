@@ -4,7 +4,11 @@ PHDRS {
 
 SECTIONS {
 	.text : { * (.text_main); * (.text); }:text = 0
-	.data : { * (.data); }
 	.rodata : { * (.rodata); }
 	.bss : { * (.bss); }
+	.data : {
+		* (.data);
+		. = ALIGN(16);
+		* (zImage.data);
+	}
 }
