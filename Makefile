@@ -3,7 +3,7 @@ LDFLAGS = -static -nostdlib
 GCC = $(CROSS_COMPILE)gcc
 OBJCOPY = $(CROSS_COMPILE)objcopy
 LD = $(CROSS_COMPILE)ld
-MKIMAGE ?= $(MKIMAGE)
+MKIMAGE ?= mkimage
 
 ifeq ($(CFG_FILE),)
 include Makefile.config
