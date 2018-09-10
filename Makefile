@@ -86,6 +86,16 @@ clean:
 distclean: clean
 	rm -fr cscope.*
 
+dist:
+	pkgname=pxa-impedance-matcher-$$(git describe --dirty --always); \
+	rm -f $$pkgname.tar.gz; \
+	git archive --prefix=$$pkgname/ HEAD -o $$pkgname.tar; \
+	mkdir -p $$pkgname; \
+	./genver.sh >$$pkgname/version.h; \
+	tar -rf $$pkgname.tar $$pkgname/version.h; \
+	rm -rf $$pkgname; \
+	gzip $$pkgname.tar
+
 cscope:
 	-find . -name "*.[chS]" >cscope.files
 	-cscope -b -R
