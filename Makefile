@@ -54,6 +54,8 @@ all: uImage
 version.h:
 	./genver.sh >version.h
 
+main.o: version.h
+
 zimage.o: $(APPEND_KERNEL)
 	cp $(APPEND_KERNEL) input/zImage
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm --prefix-sections zImage input/zImage $@
