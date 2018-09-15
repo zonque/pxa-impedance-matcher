@@ -1,4 +1,5 @@
 #include "types.h"
+#include "string.h"
 #include "atags.h"
 #include "print.h"
 #include "board.h"

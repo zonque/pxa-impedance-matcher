@@ -54,10 +54,12 @@ all: uImage
 version.h:
 	./genver.sh >version.h
 
+main.o: version.h
+
 zimage.o: $(APPEND_KERNEL)
 	cp $(APPEND_KERNEL) input/zImage
 	$(OBJCOPY) -I binary -O $(BINFMT) -B arm --prefix-sections zImage input/zImage $@
-	$(MAKE) -C libfdt
+	$(MAKE) -C libfdt libfdt.a
 
 dtbs-bin.o: $(APPEND_DTBS)
 	./append_dtbs.sh dtbs.bin $^

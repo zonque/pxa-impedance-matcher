@@ -17,6 +17,7 @@ fdt.o: fdt.c
 fdt_wip.o: fdt_wip.c
 	$(GCC) $(CFLAGS) -c $^
 
+libfdt.a: libfdt
 	ar rcs libfdt.a atags_to_fdt.o fdt_rw.o fdt_ro.o fdt.o fdt_wip.o
 
 clean:
