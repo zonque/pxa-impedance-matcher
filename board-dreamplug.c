@@ -22,7 +22,8 @@ struct board *match_board(u32 machid, const struct tag *tags)
 	/* testing zImage linked in and dtbs appended */
 	board.kernel = &_binary_input_zImage_start;
 	board.compatible = compat;
-	board.dtb = find_dtb(&_binary_dtbs_bin_start, compat);
+	board.dtb = find_dtb(&_binary_dtbs_bin_start, compat,
+			     &board.dtb_size);
 
 	return &board;
 }
