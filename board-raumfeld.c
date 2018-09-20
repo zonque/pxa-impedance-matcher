@@ -93,6 +93,12 @@ static struct raumfeld_board rboards[] = {
 	},
 	{
 		.machid			= 2415,
+		.system_rev_upper	= 2,
+		.compatible		= "raumfeld,raumfeld-speaker-l-pxa303",
+		.fixup_dtb		= &raumfeld_fixup_dtb_common,
+	},
+	{
+		.machid			= 2415,
 		.system_rev_upper	= 4,
 		.compatible		= "raumfeld,raumfeld-speaker-one-pxa303",
 		.fixup_dtb		= &raumfeld_fixup_dtb_common,
