@@ -20,6 +20,10 @@ static struct bcm63xx_board boards[] = {
 		.chip_id	= 0x63138,
 		.compatible	= "brcm,bcm63138",
 	},
+	{
+		.chip_id	= 0x63148,
+		.compatible	= "brcm,bcm63148",
+	},
 	{ 0, NULL }	/* sentinel */
 };
 
