@@ -4,13 +4,13 @@
 #include "libfdt.h"
 #include "print.h"
 #include "register.h"
-#include "types.h"
 #include "string.h"
 
 extern u32 _binary_input_zImage_start;
 extern u32 _binary_dtbs_bin_start;
 
 static u32 system_rev;
+static const char *cmdline;
 struct board board;
 
 struct raumfeld_board {
@@ -24,13 +24,15 @@ static void raumfeld_fixup_dtb_common(const struct board *board)
 {
 	int off;
 
-	off = fdt_path_offset(board->dtb, "/");
-	if (off < 0) {
-		putstr("Unable to locate /!\n");
-		return;
-	}
+	fdt_setprop_u32(board->dtb, 0, "hw-revision", system_rev & 0xff);
 
-	fdt_setprop_inplace_u32(board->dtb, off, "hw-revision", system_rev & 0xff);
+	if (cmdline) {
+		off = fdt_path_offset(board->dtb, "/chosen");
+		if (off < 0)
+			putstr("Cannot locate /chosen!");
+		else
+			fdt_setprop_string(board->dtb, off, "bootargs", cmdline);
+	}
 }
 
 static void raumfeld_fixup_dtb_controller(const struct board *board)
@@ -152,6 +154,8 @@ struct board *match_board(u32 machid, const struct tag *tags)
 {
 	struct raumfeld_board *rboard = NULL;
 
+	cmdline = NULL;
+
 	if (machid == 0xffffffff) {
 		/*
 		 * If we got a device tree passed in from kexec or such, the
@@ -200,6 +204,15 @@ struct board *match_board(u32 machid, const struct tag *tags)
 			switch (t->hdr.tag) {
 				case ATAG_REVISION:
 					system_rev = t->u.rev.rev;
+					putstr("System revision: ");
+					printhex(system_rev);
+					putstr("\n");
+					break;
+				case ATAG_CMDLINE:
+					cmdline = t->u.cmdline.cmdline;
+					putstr("Got command line from atags: >");
+					putstr(cmdline);
+					putstr("<\n");
 					break;
 			}
 		}
