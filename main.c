@@ -57,8 +57,11 @@ void main(u32 dummy, u32 machid, struct tag *tags)
 #endif
 	}
 
-	if (board->fixup_dtb)
+	if (board->fixup_dtb) {
+		fdt_open_into(board->dtb, board->dtb, 0x100000);
 		board->fixup_dtb(board);
+		fdt_pack(board->dtb);
+	}
 
 	putstr("Booting into Linux kernel ...\n");
 	start_kernel(0, 0xffffffff, dtb);
