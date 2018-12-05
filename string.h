@@ -4,6 +4,8 @@
 #include "types.h"
 
 int strlen(const char *);
+size_t strnlen(const char *s, size_t maxlen);
+char *strrchr(const char *s, int c);
 int strncmp(const char *, const char *, int);
 void *gethexaddr(const char *, const char **);
 int getaddrs(void **, void **, const char *);

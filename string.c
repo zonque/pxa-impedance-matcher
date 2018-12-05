@@ -16,6 +16,28 @@ int strlen(const char *str)
 	return c - str;
 }
 
+size_t strnlen(const char *s, size_t maxlen)
+{
+	size_t len = 0;
+
+	while (*s++ && len < maxlen)
+		len++;
+
+	return len;
+}
+
+char *strrchr(const char *s, int c)
+{
+	char *ret = NULL;
+
+	do {
+		if (*s == c)
+			ret = (char *) s;
+	} while (*s++);
+
+	return ret;
+}
+
 int strncmp(const char *stra, const char *strb, int len)
 {
 	unsigned char c1, c2;
