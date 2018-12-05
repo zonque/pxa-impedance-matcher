@@ -40,10 +40,10 @@ static void raumfeld_fixup_dtb_controller(const struct board *board)
 
 	raumfeld_fixup_dtb_common(board);
 
-        /*
+	/*
 	 * Hardware revision 2 has the backlight regulator controlled
-         * by an LT3593, earlier and later devices use PWM for that.
-         */
+	 * by an LT3593, earlier and later devices use PWM for that.
+	 */
 
 	if (system_rev == 2)
 		node = "/backlight-controller";
