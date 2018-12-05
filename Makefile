@@ -102,10 +102,6 @@ CFLAGS += -DLIBFDT="$(LIBFDT)" -I./libfdt
 #LDFLAGS += -L./libfdt -lfdt
 endif
 
-ifneq ($(origin LIBFDT_AUTO), undefined)
-#CFLAGS += -DLIBFDT_AUTO="$(LIBFDT_AUTO)"
-endif
-
 ifneq ($(origin RELOCATE_DTB), undefined)
 CFLAGS += -DRELOCATE_DTB=$(RELOCATE_DTB)
 endif
