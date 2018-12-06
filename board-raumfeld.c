@@ -168,17 +168,14 @@ struct board *match_board(u32 machid, const struct tag *tags)
 
 		const void *dtb = tags;
 		const void *val;
-	        int off;
 
-	        off = fdt_path_offset(dtb, "/");
-
-		val = fdt_getprop(dtb, off, "hw-revision", NULL);
+		val = fdt_getprop(dtb, 0, "hw-revision", NULL);
 		if (val)
 			system_rev = *(u32 *)val;
 		else
 			putstr("Error reading /hw-revision from DTB!\n");
 
-		val = fdt_getprop(dtb, off, "compatible", NULL);
+		val = fdt_getprop(dtb, 0, "compatible", NULL);
 		if (val) {
 			putstr("Got compatible string from passed DTB: ");
 			putstr(val);
