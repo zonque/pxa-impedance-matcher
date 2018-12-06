@@ -59,7 +59,7 @@ static void raumfeld_fixup_dtb_controller(const struct board *board)
 		putstr("!\n");
 	} else {
 		/* override the string "disabled", and pad the string with zero-bytes */
-		fdt_setprop_inplace(board->dtb, off, "status", "okay\0\0\0\0", 9);
+		fdt_setprop_string(board->dtb, off, "status", "okay");
 	}
 }
 
