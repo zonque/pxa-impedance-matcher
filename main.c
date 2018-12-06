@@ -1,3 +1,5 @@
+#include <libfdt.h>
+
 #include "types.h"
 #include "string.h"
 #include "atags.h"
