@@ -168,12 +168,30 @@ struct board *match_board(u32 machid, const struct tag *tags)
 
 		const void *dtb = tags;
 		const void *val;
+		int off;
 
 		val = fdt_getprop(dtb, 0, "hw-revision", NULL);
 		if (val)
 			system_rev = *(u32 *)val;
 		else
 			putstr("Error reading /hw-revision from DTB!\n");
+
+		off = fdt_path_offset(dtb, "/chosen");
+		if (off >= 0) {
+			const void *val;
+
+			val = fdt_getprop(dtb, off, "bootargs", NULL);
+			if (val) {
+				cmdline = (char *) val;
+				putstr("Got command line from DTB: >");
+				putstr(cmdline);
+				putstr("<\n");
+			} else {
+				putstr("Error reading /chosen/bootargs from DTB!\n");
+			}
+		} else {
+			putstr("Error looking for /chosen node!\n");
+		}
 
 		val = fdt_getprop(dtb, 0, "compatible", NULL);
 		if (val) {
